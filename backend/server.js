@@ -2,7 +2,6 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const session = require('express-session');
 
 const authRoutes = require('./routes/AuthRoutes');
@@ -16,7 +15,6 @@ const io = socketIo(server);
 app.use(cors());
 app.use(express.json());
 
-app.use(bodyParser.json());
 app.use(session({
     secret: 'your_secret_key',
     resave: false,
@@ -37,14 +35,12 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+server.listen(PORT, () => { });
 
 server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
         console.error(`Port ${PORT} is already in use. Trying another port...`);
-        server.listen(65243); // 0 means a random available port
+        server.listen(65243);
         const address = server.address();
         console.log(`Server is listening on port ${address.port}`);
     } else {
