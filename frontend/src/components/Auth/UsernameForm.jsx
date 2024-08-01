@@ -1,32 +1,41 @@
-// UsernameForm.jsx
+// src/components/UsernameForm.js
+
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-function UsernameForm() {
+const UsernameForm = ({ onUsernameSubmit }) => {
   const [username, setUsername] = useState('');
-  const history = useHistory();
+  const [error, setError] = useState('');
 
-  const handleSubmit = async (event) => {
+  const handleUsernameSubmit = async (event) => {
     event.preventDefault();
     try {
-      // Save username and proceed
-      await axios.post('/api/set-username', { username });
-      history.push('/lobby');
-    } catch (error) {
-      console.error('Error setting username', error);
+      const response = await axios.post('/api/set-username', { username });
+      if (response.data.success) {
+        onUsernameSubmit();
+      } else {
+        setError('Username already taken, please try another one.');
+      }
+    } catch (err) {
+      setError('An error occurred, please try again.');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-      </label>
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <form onSubmit={handleUsernameSubmit}>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter your username"
+          required
+        />
+        <button type="submit">Submit</button>
+      </form>
+      {error && <p>{error}</p>}
+    </div>
   );
-}
+};
 
 export default UsernameForm;
