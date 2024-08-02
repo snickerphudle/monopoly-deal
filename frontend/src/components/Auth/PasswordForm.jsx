@@ -1,18 +1,20 @@
 // src/components/PasswordForm.js
-
 import React, { useState } from 'react';
 import axios from 'axios';
+import './PasswordForm.css';
+import { useNavigate } from 'react-router-dom';
 
-const PasswordForm = ({ onAuthSuccess }) => {
+const PasswordForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/api/verify-password', { password });
+      const response = await axios.post('http://localhost:65243/api/verify-password', { password });
       if (response.data.success) {
-        onAuthSuccess();
+        navigate('/username');
       } else {
         setError('Invalid password, please try again.');
       }
@@ -22,8 +24,12 @@ const PasswordForm = ({ onAuthSuccess }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handlePasswordSubmit}>
+    <div className="PasswordPage">
+      <div className="logo">
+        <img className= "CenteredImage MonopolyImage" src="monopoly.png" alt="" />
+        <img className= "DealImage" src="deal.png" alt="" />
+      </div>
+      <form className="PasswordForm" onSubmit={handlePasswordSubmit}>
         <input
           type="password"
           value={password}

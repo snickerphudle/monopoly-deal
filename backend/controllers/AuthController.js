@@ -11,7 +11,3 @@ const verifyPassword = (password) => {
 module.exports = {
   verifyPassword,
 };
-
-module.exports = {
-  verifyPassword,
-};
