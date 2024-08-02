@@ -1,22 +1,23 @@
-// src/components/PasswordForm.js
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
-import './PasswordForm.css';
 import { useNavigate } from 'react-router-dom';
+import './PasswordForm.css';
 
 const PasswordForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  // const audioRef = useRef(null);
 
   const handlePasswordSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:65243/api/verify-password', { password });
       if (response.data.success) {
+        // audioRef.current.play();
         navigate('/username');
       } else {
-        setError('Invalid password, please try again.');
+        setError('Invalid password. Please try again.');
       }
     } catch (err) {
       setError('An error occurred, please try again.');
@@ -24,12 +25,8 @@ const PasswordForm = () => {
   };
 
   return (
-    <div className="PasswordPage">
-      <div className="logo">
-        <img className= "CenteredImage MonopolyImage" src="monopoly.png" alt="" />
-        <img className= "DealImage" src="deal.png" alt="" />
-      </div>
-      <form className="PasswordForm" onSubmit={handlePasswordSubmit}>
+    <div className="PasswordForm">
+      <form onSubmit={handlePasswordSubmit}>
         <input
           type="password"
           value={password}
@@ -39,7 +36,8 @@ const PasswordForm = () => {
         />
         <button type="submit">Submit</button>
       </form>
-      {error && <p>{error}</p>}
+      {error && <p className="errorMessage">{error}</p>}
+      {/* <audio ref={audioRef} src="game-bgm.mp3" /> */}
     </div>
   );
 };

@@ -1,11 +1,16 @@
 require('dotenv').config();
+const bcrypt = require('bcryptjs');
 
-// AuthControllers.js
-const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD;
+// Hashes my selected password
+const ACCESS_PASSWORD_HASH = process.env.ACCESS_PASSWORD_HASH;
 
-// AuthController.js
-const verifyPassword = (password) => {
-  return password === ACCESS_PASSWORD;
+// Hashes the user's password and compares it to my hash
+const verifyPassword = async (password, req) => {
+  const isValid = await bcrypt.compare(password, ACCESS_PASSWORD_HASH);
+  if (isValid) {
+    req.session.authenticated = true;
+  }
+  return isValid;
 };
 
 module.exports = {
